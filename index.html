@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .dashboard {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Employee Data Dashboard</h1>
+
+    <!-- Employee Data Table -->
+    <h2>Employee Table</h2>
+    <table id="employeeTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Department</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be dynamically added here -->
+        </tbody>
+    </table>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+        <h2>Dashboard</h2>
+        <canvas id="salaryChart" width="400" height="200"></canvas>
+    </div>
+
+    <script>
+        // Sample Employee Data
+        const employeeData = [
+            { name: "Alice", age: 30, department: "HR", salary: 5000 },
+            { name: "Bob", age: 25, department: "IT", salary: 6000 },
+            { name: "Charlie", age: 35, department: "Finance", salary: 7000 },
+            { name: "Diana", age: 28, department: "IT", salary: 5500 },
+            { name: "Eve", age: 40, department: "HR", salary: 6500 },
+        ];
+
+        // Populate Table
+        const tableBody = document.getElementById("employeeTable").querySelector("tbody");
+        employeeData.forEach(employee => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${employee.name}</td>
+                <td>${employee.age}</td>
+                <td>${employee.department}</td>
+                <td>${employee.salary}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        // Generate Dashboard (Bar Chart for Salaries by Department)
+        const departmentSalary = {};
+        employeeData.forEach(employee => {
+            departmentSalary[employee.department] = (departmentSalary[employee.department] || 0) + employee.salary;
+        });
+
+        const ctx = document.getElementById("salaryChart").getContext("2d");
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: Object.keys(departmentSalary),
+                datasets: [{
+                    label: "Total Salary by Department",
+                    data: Object.values(departmentSalary),
+                    backgroundColor: ["#4CAF50", "#2196F3", "#FF5722"],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
